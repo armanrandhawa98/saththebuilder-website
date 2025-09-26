@@ -36,7 +36,7 @@ export async function generateMetadata(
     const title = p.title as string;
     const description = p.description as string;
     const images = p.images as string[];
-    
+
     return {
         title: `${title} | SathTheBuilder`,
         description: description?.slice(0, 160) || "Custom woodworking project",
