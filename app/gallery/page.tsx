@@ -46,7 +46,7 @@ export default async function GalleryPage({
     const perPage = Math.min(24, Math.max(6, parseInt(perPageStr || "12", 10) || 12));
     const skip = (page - 1) * perPage;
 
-    const filter: any = { isPublished: true };
+    const filter: Record<string, unknown> = { isPublished: true };
     if (tag) filter.tags = tag;
 
     const [items, total, tagAgg] = await Promise.all([
@@ -61,7 +61,7 @@ export default async function GalleryPage({
     ]);
 
     const tags = tagAgg
-        .map((t: any) => ({ name: t._id as string, count: t.count as number }))
+        .map((t: { _id: string; count: number }) => ({ name: t._id as string, count: t.count as number }))
         .filter((t) => t.name && t.name.trim().length > 0);
 
     const totalPages = Math.max(1, Math.ceil(total / perPage));
@@ -110,9 +110,12 @@ export default async function GalleryPage({
                     <p className="text-slatey-600 dark:text-slatey-300">No projects found.</p>
                 ) : (
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {items.map((p: any) => {
-                            const href = `/p/${p.slug || p._id}`;
-                            const img = p.images?.[0];
+                        {items.map((p: Record<string, unknown>) => {
+                            const href = `/p/${(p.slug as string) || p._id}`;
+                            const img = (p.images as string[])?.[0];
+                            const title = p.title as string;
+                            const description = p.description as string;
+                            const tags = p.tags as string[];
 
                             return (
                                 <Link
@@ -124,7 +127,7 @@ export default async function GalleryPage({
                                         {img ? (
                                             <Image
                                                 src={img}
-                                                alt={p.title}
+                                                alt={title || 'Project image'}
                                                 fill
                                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                 className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
@@ -135,7 +138,7 @@ export default async function GalleryPage({
                                     </div>
                                     <div className="p-4">
                                         {/* Show description preview instead of generic title */}
-                                        {p.description && p.description.trim() && p.description !== 'Custom woodworking project crafted with attention to detail and quality materials.' ? (
+                                        {description && description.trim() && description !== 'Custom woodworking project crafted with attention to detail and quality materials.' ? (
                                             <div className="space-y-2">
                                                 <p className="text-sm font-medium text-slatey-700 dark:text-slatey-200 leading-relaxed"
                                                     style={{
@@ -144,26 +147,26 @@ export default async function GalleryPage({
                                                         WebkitBoxOrient: 'vertical',
                                                         overflow: 'hidden'
                                                     }}>
-                                                    {p.description.length > 150 ?
-                                                        p.description.substring(0, 150).replace(/\s+\S*$/, '') + '...' :
-                                                        p.description
+                                                    {description.length > 150 ?
+                                                        description.substring(0, 150).replace(/\s+\S*$/, '') + '...' :
+                                                        description
                                                     }
                                                 </p>
                                             </div>
                                         ) : (
-                                            <h3 className="font-semibold text-slatey-800 dark:text-slatey-200">{p.title}</h3>
+                                            <h3 className="font-semibold text-slatey-800 dark:text-slatey-200">{title}</h3>
                                         )}
 
-                                        {p.tags?.length > 0 && (
+                                        {tags?.length > 0 && (
                                             <div className="mt-3 flex flex-wrap gap-2">
-                                                {p.tags.slice(0, 4).map((t: string) => (
+                                                {tags.slice(0, 4).map((t: string) => (
                                                     <span key={t} className="text-xs px-2 py-0.5 rounded-full border border-slatey-300 dark:border-slatey-600 text-slatey-600 dark:text-slatey-300">
                                                         {t}
                                                     </span>
                                                 ))}
-                                                {p.tags.length > 4 && (
+                                                {tags.length > 4 && (
                                                     <span className="text-xs px-2 py-0.5 rounded-full border border-slatey-300 dark:border-slatey-600 text-slatey-500 dark:text-slatey-400">
-                                                        +{p.tags.length - 4}
+                                                        +{tags.length - 4}
                                                     </span>
                                                 )}
                                             </div>

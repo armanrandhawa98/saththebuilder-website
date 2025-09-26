@@ -18,7 +18,7 @@ async function isAdmin() {
     const token = store.get("sb_token")?.value;
     if (!token) return false;
     const payload = await verifyJWT(token);
-    return !!payload && (payload as any).role === "admin";
+    return !!payload && (payload as { role: string }).role === "admin";
 }
 
 // metadata with canonical
@@ -29,19 +29,23 @@ export async function generateMetadata(
     await connectDB();
 
     const query = looksLikeObjectId(slug) ? { _id: slug } : { slug };
-    const p = await Project.findOne(query).lean();
-    if (!p || !p.title) return { title: "Project | SathTheBuilder" };
+    const p = await Project.findOne(query).lean() as Record<string, unknown> | null;
+    if (!p || !(p.title as string)) return { title: "Project | SathTheBuilder" };
 
-    const canonicalPath = `/p/${p.slug || p._id}`;
+    const canonicalPath = `/p/${(p.slug as string) || p._id}`;
+    const title = p.title as string;
+    const description = p.description as string;
+    const images = p.images as string[];
+    
     return {
-        title: `${p.title} | SathTheBuilder`,
-        description: p.description?.slice(0, 160) || "Custom woodworking project",
+        title: `${title} | SathTheBuilder`,
+        description: description?.slice(0, 160) || "Custom woodworking project",
         alternates: { canonical: siteUrl(canonicalPath) },
         openGraph: {
-            title: p.title,
-            description: p.description?.slice(0, 160),
+            title: title,
+            description: description?.slice(0, 160),
             url: siteUrl(canonicalPath),
-            images: p.images?.length ? [p.images[0]] : undefined,
+            images: images?.length ? [images[0]] : undefined,
         },
     };
 }
@@ -54,8 +58,19 @@ export default async function ProjectPage(
 
     const admin = await isAdmin();
     const query = looksLikeObjectId(slug) ? { _id: slug } : { slug };
-    const p = await Project.findOne(query).lean();
-    if (!p) notFound();
+    const project = await Project.findOne(query).lean() as Record<string, unknown> | null;
+    if (!project) notFound();
+
+    const p = project as {
+        _id: string;
+        slug?: string;
+        title: string;
+        description?: string;
+        images?: string[];
+        tags?: string[];
+        isPublished: boolean;
+        createdAt?: string;
+    };
 
     // Redirect to canonical slug if needed
     const canonicalSlug = p.slug || String(p._id);
@@ -99,7 +114,7 @@ export default async function ProjectPage(
                     <div className="text-sm text-slatey-500 dark:text-slatey-400">{created}</div>
                 )}
 
-                {p.tags?.length > 0 && (
+                {p.tags && p.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                         {p.tags.map((t: string) => (
                             <span key={t} className="text-xs px-2 py-0.5 rounded-full border border-slatey-300 dark:border-slatey-600">

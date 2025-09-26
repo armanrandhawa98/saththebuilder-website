@@ -123,7 +123,7 @@ export default function InstagramMigrationPage() {
             });
 
             if (response.ok) {
-                const project = await response.json();
+                await response.json();
                 alert(`Project "${projectData.title}" created successfully!`);
 
                 // Reset form

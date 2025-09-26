@@ -10,5 +10,5 @@ export async function getUser() {
 
 export async function isAdmin() {
   const user = await getUser();
-  return !!user && (user as any).role === "admin";
+  return !!user && (user as { role: string }).role === "admin";
 }

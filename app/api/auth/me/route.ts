@@ -11,12 +11,13 @@ export async function GET() {
   const payload = await verifyJWT(token);
   if (!payload) return NextResponse.json({ authenticated: false }, { status: 401 });
 
+  const user = payload as { email: string; username: string; role: string };
   return NextResponse.json({
     authenticated: true,
     user: {
-      email: (payload as any).email,
-      username: (payload as any).username,
-      role: (payload as any).role, // "admin"
+      email: user.email,
+      username: user.username,
+      role: user.role, // "admin"
     },
   });
 }

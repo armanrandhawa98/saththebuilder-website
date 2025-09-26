@@ -15,10 +15,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: siteUrl("/contact"), lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
   ];
 
-  const projectUrls: MetadataRoute.Sitemap = projects.map((p: any) => ({
-    url: siteUrl(`/p/${p.slug}`),
-    lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
-    changeFrequency: "monthly",
+  const projectUrls: MetadataRoute.Sitemap = projects.map((p: Record<string, unknown>) => ({
+    url: siteUrl(`/p/${(p.slug as string) || p._id}`),
+    lastModified: p.updatedAt ? new Date(p.updatedAt as string) : new Date(),
+    changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
