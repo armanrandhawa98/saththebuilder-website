@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import AdminProjectEditor from "@/components/AdminProjectEditor";
 
 type Project = {
@@ -126,6 +127,12 @@ export default function AdminPage() {
                 <h1 className="text-2xl font-semibold text-wood-600 dark:text-wood-300">Admin Dashboard</h1>
                 <div className="flex items-center gap-3">
                     <a
+                        href="/admin/instagram"
+                        className="px-4 py-2 rounded-xl bg-wood-500 text-white hover:bg-wood-600 font-medium transition"
+                    >
+                        📱 Instagram Migration
+                    </a>
+                    <a
                         href="/admin/messages"
                         className="px-4 py-2 rounded-xl bg-accent-500 text-white hover:bg-accent-600 font-medium transition"
                     >
@@ -171,8 +178,15 @@ export default function AdminPage() {
                         {previewUrls.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-3">
                                 {previewUrls.map(u => (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img key={u} src={u} alt="preview" className="h-20 w-28 object-cover rounded-lg border border-slatey-300 dark:border-slatey-600" />
+                                    <div key={u} className="relative h-20 w-28 rounded-lg overflow-hidden border border-slatey-300 dark:border-slatey-600">
+                                        <Image
+                                            src={u}
+                                            alt="preview"
+                                            fill
+                                            sizes="112px"
+                                            className="object-cover"
+                                        />
+                                    </div>
                                 ))}
                             </div>
                         )}
@@ -223,10 +237,15 @@ export default function AdminPage() {
                         {items.map(p => (
                             <div key={p._id} className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slatey-200 dark:border-slatey-700 pb-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="h-12 w-16 rounded-lg overflow-hidden bg-slatey-200 dark:bg-slatey-700 flex items-center justify-center">
+                                    <div className="relative h-12 w-16 rounded-lg overflow-hidden bg-slatey-200 dark:bg-slatey-700 flex items-center justify-center">
                                         {p.images?.[0] ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={p.images[0]} alt="" className="h-full w-full object-cover" />
+                                            <Image
+                                                src={p.images[0]}
+                                                alt={p.title}
+                                                fill
+                                                sizes="64px"
+                                                className="object-cover"
+                                            />
                                         ) : (
                                             <span className="text-xs text-slatey-500 dark:text-slatey-400">no img</span>
                                         )}
