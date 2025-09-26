@@ -1,22 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SathTheBuilder - Custom Woodworking Portfolio
+
+A professional portfolio website for custom woodworking services, built with Next.js 15 and modern web technologies.
+
+## Features
+
+- 🎨 **Modern Design**: Clean, professional woodworking-focused design theme
+- 📱 **Responsive**: Mobile-first design that works on all devices
+- 🖼️ **Gallery**: Project showcase with filtering and pagination
+- 🛠️ **Services**: Detailed pricing and service information
+- 📝 **Contact**: Project inquiry form with admin management
+- 👤 **About**: Craftsman story and philosophy
+- 🔐 **Admin Panel**: Project management, bulk import, Instagram integration
+- ☁️ **Cloud Ready**: Deployed on Vercel with MongoDB Atlas
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Styling**: Tailwind CSS with custom design system
+- **Database**: MongoDB with Mongoose
+- **Images**: Cloudinary for optimized image handling
+- **Authentication**: JWT-based admin authentication
+- **Deployment**: Vercel
+- **Languages**: TypeScript, JavaScript
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- MongoDB database (local or Atlas)
+- Cloudinary account for image uploads
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/saththebuilder-website.git
+cd saththebuilder-website
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+4. Update `.env.local` with your actual values:
+- MongoDB connection string
+- JWT secret key
+- Cloudinary credentials
+- Site URL
+
+5. Run the development server:
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
