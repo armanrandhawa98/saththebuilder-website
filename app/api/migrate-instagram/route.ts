@@ -13,18 +13,49 @@ interface InstagramImageMigrationResult {
 
 async function uploadImageToCloudinary(imageUrl: string, publicId: string): Promise<string> {
     try {
+        console.log(`Attempting to upload image: ${imageUrl}`);
+        console.log(`Public ID: ${publicId}`);
+        console.log(`Cloudinary config check:`, {
+            hasCloudName: !!process.env.CLOUDINARY_CLOUD_NAME,
+            hasApiKey: !!process.env.CLOUDINARY_API_KEY,
+            hasApiSecret: !!process.env.CLOUDINARY_API_SECRET,
+            uploadFolder: process.env.CLOUDINARY_UPLOAD_FOLDER
+        });
+
+        // First, try to fetch the image to see if it's accessible
+        const fetchResponse = await fetch(imageUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (compatible; InstagramImageMigrator/1.0)',
+                'Accept': 'image/*',
+            }
+        });
+
+        if (!fetchResponse.ok) {
+            throw new Error(`Failed to fetch image: ${fetchResponse.status} ${fetchResponse.statusText}`);
+        }
+
+        console.log(`Image fetch successful, content-type: ${fetchResponse.headers.get('content-type')}`);
+
         const result = await cloudinary.uploader.upload(imageUrl, {
             public_id: publicId,
             folder: process.env.CLOUDINARY_UPLOAD_FOLDER || "saththebuilder",
             overwrite: true,
+            resource_type: "auto",
             transformation: [
                 { width: 1200, height: 800, crop: "fill", quality: "auto" },
                 { fetch_format: "auto" }
             ]
         });
+        
+        console.log(`Cloudinary upload successful: ${result.secure_url}`);
         return result.secure_url;
     } catch (error) {
-        console.error("Cloudinary upload failed:", error);
+        console.error("Detailed Cloudinary upload error:", {
+            error: error instanceof Error ? error.message : error,
+            stack: error instanceof Error ? error.stack : undefined,
+            imageUrl,
+            publicId
+        });
         throw error;
     }
 }
@@ -53,11 +84,17 @@ async function migrateProjectImages(project: { _id: string; title: string; slug?
                 
                 newImages.push(newUrl);
             } catch (error) {
+                const errorMessage = error instanceof Error 
+                    ? `${error.name}: ${error.message}` 
+                    : `Unknown error: ${JSON.stringify(error)}`;
+                
+                console.error(`Migration failed for ${originalUrl}:`, error);
+                
                 results.push({
                     originalUrl,
                     newUrl: originalUrl, // Keep original if migration fails
                     success: false,
-                    error: error instanceof Error ? error.message : "Unknown error"
+                    error: errorMessage
                 });
                 
                 newImages.push(originalUrl); // Keep original URL as fallback

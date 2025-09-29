@@ -14,15 +14,15 @@ interface InstagramImageProps {
     priority?: boolean;
 }
 
-export default function InstagramImage({ 
-    src, 
-    alt, 
-    width, 
-    height, 
-    className = '', 
+export default function InstagramImage({
+    src,
+    alt,
+    width,
+    height,
+    className = '',
     fill = false,
     sizes,
-    priority = false 
+    priority = false
 }: InstagramImageProps) {
     const [imageSrc, setImageSrc] = useState(src);
     const [useProxy, setUseProxy] = useState(false);
