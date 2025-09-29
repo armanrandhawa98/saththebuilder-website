@@ -8,7 +8,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
-  if (!(await isAdmin(req))) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
   const { id } = await params;
   const body = await req.json().catch(() => ({}));
@@ -22,7 +22,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
-  if (!(await isAdmin(req))) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
   const { id } = await params;
   const res = await Contact.findByIdAndDelete(id);
