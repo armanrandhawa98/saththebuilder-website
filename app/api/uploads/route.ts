@@ -5,7 +5,7 @@ import { isAdmin } from "@/lib/auth";
 export const runtime = "nodejs"; // ensure Node runtime for Buffer/streams
 
 export async function POST(req: Request) {
-  if (!(await isAdmin(req))) {
+  if (!(await isAdmin())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

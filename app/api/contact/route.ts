@@ -17,7 +17,7 @@ function ipFrom(req: Request) {
 
 export async function GET(req: Request) {
   await connectDB();
-  if (!(await isAdmin(req))) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const url = new URL(req.url);
   const skip = Number(url.searchParams.get("skip") || 0);
