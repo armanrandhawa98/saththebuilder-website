@@ -6,13 +6,15 @@ import Link from 'next/link';
 export default function AdminUtilitiesPage() {
     const [seedLoading, setSeedLoading] = useState(false);
     const [seedResult, setSeedResult] = useState<string>('');
+    const [migrateLoading, setMigrateLoading] = useState(false);
+    const [migrateResult, setMigrateResult] = useState<string>('');
 
-    const seedDatabase = async () => {
-        setSeedLoading(true);
-        setSeedResult('Seeding database...');
+    const migrateInstagramImages = async () => {
+        setMigrateLoading(true);
+        setMigrateResult('Migrating Instagram images to Cloudinary...');
         
         try {
-            const response = await fetch('/api/seed', {
+            const response = await fetch('/api/migrate-instagram', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -21,6 +23,54 @@ export default function AdminUtilitiesPage() {
             
             const data = await response.json();
             
+            if (data.success) {
+                const { summary, results } = data;
+                let resultText = `✅ Migration Complete!\n\n`;
+                resultText += `📊 Summary:\n`;
+                resultText += `• Projects processed: ${summary.projectsProcessed}\n`;
+                resultText += `• Total images: ${summary.totalImages}\n`;
+                resultText += `• Successfully migrated: ${summary.successfulMigrations}\n`;
+                resultText += `• Failed migrations: ${summary.failedMigrations}\n\n`;
+                
+                if (results.length > 0) {
+                    resultText += `📋 Details:\n`;
+                    results.forEach((project: { projectTitle: string; images: Array<{ originalUrl: string; newUrl: string; success: boolean; error?: string }> }) => {
+                        resultText += `\n• ${project.projectTitle}:\n`;
+                        project.images.forEach((img) => {
+                            if (img.originalUrl !== img.newUrl) {
+                                resultText += `  ✅ Migrated to Cloudinary\n`;
+                            } else if (!img.success) {
+                                resultText += `  ❌ Failed: ${img.error}\n`;
+                            }
+                        });
+                    });
+                }
+                
+                setMigrateResult(resultText);
+            } else {
+                setMigrateResult(`❌ Error: ${data.error}`);
+            }
+        } catch (error) {
+            setMigrateResult(`❌ Network Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        } finally {
+            setMigrateLoading(false);
+        }
+    };
+
+    const seedDatabase = async () => {
+        setSeedLoading(true);
+        setSeedResult('Seeding database...');
+
+        try {
+            const response = await fetch('/api/seed', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
             if (data.success) {
                 setSeedResult(`✅ Success! ${data.message}\n\nNew Projects:\n${data.projects.map((p: { title: string; imageCount: number }) => `• ${p.title} (${p.imageCount} images)`).join('\n')}`);
             } else {
@@ -46,7 +96,7 @@ export default function AdminUtilitiesPage() {
                 {/* Database Seeding Section */}
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">Database Management</h2>
-                    
+
                     <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4">
                         <div className="flex">
                             <div className="ml-3">
@@ -56,7 +106,7 @@ export default function AdminUtilitiesPage() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <button
                         onClick={seedDatabase}
                         disabled={seedLoading}
@@ -64,11 +114,41 @@ export default function AdminUtilitiesPage() {
                     >
                         {seedLoading ? 'Seeding Database...' : 'Seed Database with Sample Projects'}
                     </button>
-                    
+
                     {seedResult && (
                         <div className="mt-6 p-4 bg-gray-100 rounded-lg border">
                             <h3 className="font-medium text-gray-900 mb-2">Result:</h3>
                             <pre className="whitespace-pre-wrap text-sm text-gray-700">{seedResult}</pre>
+                        </div>
+                    )}
+                </div>
+
+                {/* Instagram Image Migration Section */}
+                <div className="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Instagram Image Migration</h2>
+                    
+                    <div className="border-l-4 border-blue-400 bg-blue-50 p-4 mb-4">
+                        <div className="flex">
+                            <div className="ml-3">
+                                <p className="text-sm text-blue-700">
+                                    <strong>Migration:</strong> This will upload all Instagram images to Cloudinary for reliable hosting. Original projects will be preserved with updated image URLs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button
+                        onClick={migrateInstagramImages}
+                        disabled={migrateLoading}
+                        className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                    >
+                        {migrateLoading ? 'Migrating Images...' : 'Migrate Instagram Images to Cloudinary'}
+                    </button>
+                    
+                    {migrateResult && (
+                        <div className="mt-6 p-4 bg-gray-100 rounded-lg border">
+                            <h3 className="font-medium text-gray-900 mb-2">Migration Result:</h3>
+                            <pre className="whitespace-pre-wrap text-sm text-gray-700">{migrateResult}</pre>
                         </div>
                     )}
                 </div>
@@ -81,8 +161,8 @@ export default function AdminUtilitiesPage() {
                     </p>
                     <div className="space-y-2">
                         <div>
-                            <a 
-                                href="/api/debug" 
+                            <a
+                                href="/api/debug"
                                 target="_blank"
                                 className="text-blue-600 hover:text-blue-800 underline"
                             >
