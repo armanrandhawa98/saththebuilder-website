@@ -14,11 +14,11 @@ export default function AdminUtilitiesPage() {
     const testCloudinary = async () => {
         setTestLoading(true);
         setTestResult('Testing Cloudinary configuration...');
-        
+
         try {
             const response = await fetch('/api/test-cloudinary');
             const data = await response.json();
-            
+
             if (data.success) {
                 setTestResult(`✅ Cloudinary Test Successful!\n\nConfig:\n${JSON.stringify(data.config, null, 2)}\n\nTest Upload:\n• URL: ${data.testResult.uploadedUrl}\n• Public ID: ${data.testResult.publicId}`);
             } else {
@@ -178,7 +178,7 @@ export default function AdminUtilitiesPage() {
                 {/* Cloudinary Test Section */}
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">Cloudinary Configuration Test</h2>
-                    
+
                     <div className="border-l-4 border-purple-400 bg-purple-50 p-4 mb-4">
                         <div className="flex">
                             <div className="ml-3">
@@ -188,7 +188,7 @@ export default function AdminUtilitiesPage() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <button
                         onClick={testCloudinary}
                         disabled={testLoading}
@@ -196,7 +196,7 @@ export default function AdminUtilitiesPage() {
                     >
                         {testLoading ? 'Testing Cloudinary...' : 'Test Cloudinary Configuration'}
                     </button>
-                    
+
                     {testResult && (
                         <div className="mt-6 p-4 bg-gray-100 rounded-lg border">
                             <h3 className="font-medium text-gray-900 mb-2">Test Result:</h3>
