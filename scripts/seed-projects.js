@@ -36,9 +36,9 @@ const sampleProjects = [
         title: "Walnut Dining Table",
         description: "Custom 8-foot dining table crafted from solid walnut with traditional mortise and tenon joinery. Features a hand-rubbed oil finish that highlights the beautiful grain patterns.",
         images: [
-            "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800",
-            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
-            "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800"
+            "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
         ],
         tags: ["table", "walnut", "dining", "hardwood", "custom"],
         isPublished: true,
