@@ -17,7 +17,7 @@ export default async function OGImage({ params }: { params: Promise<{ slug: stri
 
     await connectDB();
     const query = looksLikeObjectId(slug) ? { _id: slug } : { slug };
-    const p = await Project.findOne(query).lean();
+    const p = await Project.findOne(query).lean() as { title?: string; images?: string[] } | null;
 
     const title = p?.title || "SathTheBuilder";
     const bg = p?.images?.[0];
