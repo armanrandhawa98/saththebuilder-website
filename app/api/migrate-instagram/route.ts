@@ -121,7 +121,7 @@ export async function POST() {
             
             allResults.push({
                 projectTitle: project.title,
-                projectId: project._id.toString(),
+                projectId: (project._id as { toString(): string }).toString(),
                 images: imageResults
             });
         }
