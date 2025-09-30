@@ -7,25 +7,6 @@ import Project from "@/models/Project";
 export default async function HomePage() {
   await connectDB();
 
-  // Debug: Check what we have
-  const allProjects = await Project.find({}).lean();
-  const publishedAndFeatured = await Project.find({ isPublished: true, isFeatured: true }).lean();
-  
-  console.log('🔍 HOMEPAGE DEBUG:');
-  console.log('All projects:', allProjects.map(p => ({ 
-    title: p.title, 
-    isPublished: p.isPublished, 
-    isFeatured: p.isFeatured,
-    createdAt: p.createdAt 
-  })));
-  console.log('Featured projects found:', publishedAndFeatured.length);
-  console.log('Featured projects:', publishedAndFeatured.map(p => ({ 
-    title: p.title, 
-    isPublished: p.isPublished, 
-    isFeatured: p.isFeatured,
-    createdAt: p.createdAt 
-  })));
-
   // Featured-only highlights
   const projects = await Project.find({ isPublished: true, isFeatured: true })
     .sort({ createdAt: -1 })
@@ -72,14 +53,6 @@ export default async function HomePage() {
             View All Projects
             <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
           </Link>
-        </div>
-
-        {/* Debug info */}
-        <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900 rounded text-xs">
-          <strong>Frontend Debug:</strong> Found {projects.length} featured projects to render
-          {projects.map((p, i) => (
-            <div key={i}>• {p.title} (images: {p.images?.length || 0})</div>
-          ))}
         </div>
 
         {projects.length === 0 ? (
