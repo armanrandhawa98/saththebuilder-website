@@ -15,7 +15,7 @@ export async function GET() {
     total: allProjects.length,
     published: publishedProjects.length,
     featured: featuredProjects.length,
-    publishedAndFeatured: publishedAndFeatured.length,
+    publishedAndFeaturedCount: publishedAndFeatured.length,
     allProjects: allProjects.map(p => ({
       id: p._id,
       title: p.title,

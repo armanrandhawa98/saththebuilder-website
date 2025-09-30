@@ -11,7 +11,7 @@ export default async function HomePage() {
   const allProjects = await Project.find({}).lean();
   const publishedProjects = await Project.find({ isPublished: true }).lean();
   const featuredProjects = await Project.find({ isFeatured: true }).lean();
-  
+
   // Featured-only highlights
   const projects = await Project.find({ isPublished: true, isFeatured: true })
     .sort({ createdAt: -1 })
@@ -70,19 +70,19 @@ export default async function HomePage() {
 
         {/* Debug info */}
         <div className="mb-4 p-4 bg-yellow-100 dark:bg-yellow-900 rounded text-sm">
-          <strong>🔍 Debug Info:</strong><br/>
-          Total projects: {allProjects.length}<br/>
-          Published: {publishedProjects.length}<br/>
-          Featured: {featuredProjects.length}<br/>
-          Published AND Featured: {projects.length}<br/>
+          <strong>🔍 Debug Info:</strong><br />
+          Total projects: {allProjects.length}<br />
+          Published: {publishedProjects.length}<br />
+          Featured: {featuredProjects.length}<br />
+          Published AND Featured: {projects.length}<br />
           {allProjects.length > 0 && (
             <details className="mt-2">
               <summary>Project Details</summary>
               <pre className="text-xs mt-2 whitespace-pre-wrap">
-                {JSON.stringify(allProjects.map(p => ({ 
-                  title: p.title, 
-                  isPublished: p.isPublished, 
-                  isFeatured: p.isFeatured 
+                {JSON.stringify(allProjects.map(p => ({
+                  title: p.title,
+                  isPublished: p.isPublished,
+                  isFeatured: p.isFeatured
                 })), null, 2)}
               </pre>
             </details>
