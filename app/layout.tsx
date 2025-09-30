@@ -26,8 +26,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <p className="mb-1">Like this website?</p>
                 <p>
                   Contact <strong className="text-wood-600 dark:text-wood-400">Arman Randhawa</strong> at{" "}
-                  <a 
-                    href="mailto:arman.randhawa98@gmail.com" 
+                  <a
+                    href="mailto:arman.randhawa98@gmail.com"
                     className="text-wood-600 hover:text-wood-700 dark:text-wood-400 dark:hover:text-wood-300 underline font-medium"
                   >
                     arman.randhawa98@gmail.com
