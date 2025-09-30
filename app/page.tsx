@@ -7,6 +7,20 @@ import Project from "@/models/Project";
 export default async function HomePage() {
   await connectDB();
 
+  // Debug: Check what we have
+  const allFeatured = await Project.find({ isPublished: true, isFeatured: true })
+    .sort({ createdAt: -1 })
+    .lean();
+  
+  console.log('🔍 FEATURED PROJECTS DEBUG:');
+  console.log('Found featured projects:', allFeatured.length);
+  console.log('Featured projects:', allFeatured.map(p => ({ 
+    title: p.title, 
+    createdAt: p.createdAt,
+    isPublished: p.isPublished,
+    isFeatured: p.isFeatured
+  })));
+
   // Featured-only highlights
   const projects = await Project.find({ isPublished: true, isFeatured: true })
     .sort({ createdAt: -1 })
@@ -53,6 +67,14 @@ export default async function HomePage() {
             View All Projects
             <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
           </Link>
+        </div>
+
+        {/* Debug info */}
+        <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900 rounded text-xs">
+          <strong>Homepage Debug:</strong> Found {projects.length} featured projects
+          {projects.map((p, i) => (
+            <div key={i}>• {p.title} (created: {new Date(p.createdAt).toLocaleDateString()})</div>
+          ))}
         </div>
 
         {projects.length === 0 ? (
