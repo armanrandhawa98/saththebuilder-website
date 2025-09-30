@@ -10,7 +10,7 @@ A professional portfolio website for custom woodworking services, built with Nex
 - 🛠️ **Services**: Detailed pricing and service information
 - 📝 **Contact**: Project inquiry form with admin management
 - 👤 **About**: Craftsman story and philosophy
-- 🔐 **Admin Panel**: Project management, bulk import, Instagram integration
+- 🔐 **Admin Panel**: Project management and content editing
 - ☁️ **Cloud Ready**: Deployed on Vercel with MongoDB Atlas
 
 ## Tech Stack

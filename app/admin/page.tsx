@@ -127,12 +127,6 @@ export default function AdminPage() {
                 <h1 className="text-2xl font-semibold text-wood-600 dark:text-wood-300">Admin Dashboard</h1>
                 <div className="flex items-center gap-3">
                     <a
-                        href="/admin/instagram"
-                        className="px-4 py-2 rounded-xl bg-wood-500 text-white hover:bg-wood-600 font-medium transition"
-                    >
-                        📱 Instagram Migration
-                    </a>
-                    <a
                         href="/admin/messages"
                         className="px-4 py-2 rounded-xl bg-accent-500 text-white hover:bg-accent-600 font-medium transition"
                     >
