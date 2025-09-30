@@ -7,11 +7,24 @@ import Project from "@/models/Project";
 export default async function HomePage() {
   await connectDB();
 
+  // Debug: Get all projects to see what we have
+  const allProjects = await Project.find({}).lean();
+  const publishedProjects = await Project.find({ isPublished: true }).lean();
+  const featuredProjects = await Project.find({ isFeatured: true }).lean();
+  
   // Featured-only highlights
   const projects = await Project.find({ isPublished: true, isFeatured: true })
     .sort({ createdAt: -1 })
     .limit(6)
     .lean();
+
+  // Debug log
+  console.log('🔍 DEBUG INFO:');
+  console.log('Total projects:', allProjects.length);
+  console.log('Published projects:', publishedProjects.length);
+  console.log('Featured projects:', featuredProjects.length);
+  console.log('Published AND Featured projects:', projects.length);
+  console.log('All projects data:', allProjects.map(p => ({ title: p.title, isPublished: p.isPublished, isFeatured: p.isFeatured })));
 
   return (
     <div className="space-y-12">
@@ -53,6 +66,27 @@ export default async function HomePage() {
             View All Projects
             <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
           </Link>
+        </div>
+
+        {/* Debug info */}
+        <div className="mb-4 p-4 bg-yellow-100 dark:bg-yellow-900 rounded text-sm">
+          <strong>🔍 Debug Info:</strong><br/>
+          Total projects: {allProjects.length}<br/>
+          Published: {publishedProjects.length}<br/>
+          Featured: {featuredProjects.length}<br/>
+          Published AND Featured: {projects.length}<br/>
+          {allProjects.length > 0 && (
+            <details className="mt-2">
+              <summary>Project Details</summary>
+              <pre className="text-xs mt-2 whitespace-pre-wrap">
+                {JSON.stringify(allProjects.map(p => ({ 
+                  title: p.title, 
+                  isPublished: p.isPublished, 
+                  isFeatured: p.isFeatured 
+                })), null, 2)}
+              </pre>
+            </details>
+          )}
         </div>
 
         {projects.length === 0 ? (
